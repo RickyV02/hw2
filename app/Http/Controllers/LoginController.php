@@ -65,89 +65,89 @@ class LoginController extends BaseController{
         }   
         
 
-    if (!empty(Request::post('email')) && !empty(Request::post('username')) && !empty(Request::post('password')) && !empty(Request::post('rpassword')) && !empty(Request::post('terms'))) {
-    $errors = [];
-    $email = Request::post('email');
-    $password = Request::post('password');
+        if (!empty(Request::post('email')) && !empty(Request::post('username')) && !empty(Request::post('password')) && !empty(Request::post('rpassword')) && !empty(Request::post('terms'))) {
+        $errors = [];
+        $email = Request::post('email');
+        $password = Request::post('password');
 
-    if (!preg_match('/^[a-zA-Z0-9_]{1,15}$/', Request::post('username'))) {
-        $errors[] = "Username format not valid!";
-    } elseif (strlen(Request::post('username')) < 4 || strlen(Request::post('username')) > 16) {
-        $errors[] = "Enter username between 4 and 16 characters!";
-    } else {
-        $username = Request::post('username');
-        $existingUsername = Account::where('USERNAME', $username)->exists();
-        if ($existingUsername) {
-            $errors[] = "Username already taken!";
-        }
-    }
-
-    if (strlen($password) < 8) {
-        $errors[] = "Enter a password with at least 8 characters!";
-    }
-
-    if ($password !== Request::post("rpassword")) {
-        $errors[] = "Passwords doesn't match!";
-    }
-
-    if (!preg_match('/[!@#$%^&*()\-_=+{};:,<.>]/', $password) && !preg_match('/[A-Z]/', $password)) {
-        $errors[] = "Password must contain at least one Upper Case letter and a special character!";
-    }
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Email format not valid!";
-    } else {
-        $email = strtolower($email);
-        $existingEmail = Account::where('EMAIL', $email)->exists();
-        if ($existingEmail) {
-            $errors[] = "Email already taken!";
-        }
-    }
-
-    if (empty($errors)) {
-        if (Request::hasFile('avatar')) {
-            $avatar = Request::file('avatar');
-
-            $allowedExtensions = ['png', 'jpeg', 'jpg', 'gif'];
-            $fileExtension = strtolower($avatar->getClientOriginalExtension());
-
-            if (!in_array($fileExtension, $allowedExtensions)) {
-                $errors[] = "Allowed formats are .png, .jpeg, .jpg, and .gif!";
-            } else {
-                if ($avatar->isValid()) {
-                    if ($avatar->getSize() <= 5*1024*1024) {
-                        $newName = uniqid('', true) . "." . $fileExtension;
-                        $avatar->move(public_path() . "/assets", $newName);
-                        $avatar = 'assets/' . $newName;
-                    } else {
-                        $errors[] = "The image must not exceed 5MB!";
-                    }
-                } else {
-                    $errors[] = "Error loading the file!";
-                }
-            }
+        if (!preg_match('/^[a-zA-Z0-9_]{1,15}$/', Request::post('username'))) {
+            $errors[] = "Username format not valid!";
+        } elseif (strlen(Request::post('username')) < 4 || strlen(Request::post('username')) > 16) {
+            $errors[] = "Enter username between 4 and 16 characters!";
         } else {
-            $errors[] = "No image loaded!";
+            $username = Request::post('username');
+            $existingUsername = Account::where('USERNAME', $username)->exists();
+            if ($existingUsername) {
+                $errors[] = "Username already taken!";
+            }
         }
-    }
 
-    if (empty($errors)) {
-        $password = bcrypt($password);
+        if (strlen($password) < 8) {
+            $errors[] = "Enter a password with at least 8 characters!";
+        }
 
-        $user = new Account;
-        $user->USERNAME = Request::post('username');
-        $user->PWD = $password;
-        $user->EMAIL = Request::post('email');
-        $user->AVATAR=$avatar;
-        $user->save();
-        
-        Session::put('id', $user->ID);
-        Session::put('username', $user->USERNAME);
-        return redirect('home');
-    }
-    } elseif (Request::post("username")) {
-    $errors[] = "Fill all the fields!";
-    }
-    return redirect('signup')->withInput()->withErrors($errors);
+        if ($password !== Request::post("rpassword")) {
+            $errors[] = "Passwords doesn't match!";
+        }
+
+        if (!preg_match('/[!@#$%^&*()\-_=+{};:,<.>]/', $password) && !preg_match('/[A-Z]/', $password)) {
+            $errors[] = "Password must contain at least one Upper Case letter and a special character!";
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors[] = "Email format not valid!";
+        } else {
+            $email = strtolower($email);
+            $existingEmail = Account::where('EMAIL', $email)->exists();
+            if ($existingEmail) {
+                $errors[] = "Email already taken!";
+            }
+        }
+
+        if (empty($errors)) {
+            if (Request::hasFile('avatar')) {
+                $avatar = Request::file('avatar');
+
+                $allowedExtensions = ['png', 'jpeg', 'jpg', 'gif'];
+                $fileExtension = strtolower($avatar->getClientOriginalExtension());
+
+                if (!in_array($fileExtension, $allowedExtensions)) {
+                    $errors[] = "Allowed formats are .png, .jpeg, .jpg, and .gif!";
+                } else {
+                    if ($avatar->isValid()) {
+                        if ($avatar->getSize() <= 5*1024*1024) {
+                            $newName = uniqid('', true) . "." . $fileExtension;
+                            $avatar->move(public_path() . "/assets", $newName);
+                            $avatar = 'assets/' . $newName;
+                        } else {
+                            $errors[] = "The image must not exceed 5MB!";
+                        }
+                    } else {
+                        $errors[] = "Error loading the file!";
+                    }
+                }
+            } else {
+                $errors[] = "No image loaded!";
+            }
+        }
+
+        if (empty($errors)) {
+            $password = bcrypt($password);
+
+            $user = new Account;
+            $user->USERNAME = Request::post('username');
+            $user->PWD = $password;
+            $user->EMAIL = Request::post('email');
+            $user->AVATAR=$avatar;
+            $user->save();
+            
+            Session::put('id', $user->ID);
+            Session::put('username', $user->USERNAME);
+            return redirect('home');
+        }
+        } elseif (Request::post("username")) {
+        $errors[] = "Fill all the fields!";
+        }
+        return redirect('signup')->withInput()->withErrors($errors);
     }
 }
