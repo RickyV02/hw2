@@ -1,0 +1,62 @@
+@import url(https://db.onlinewebfonts.com/c/f82a45d96a5a30abb6417c5b81fc416d?family=Graphik+LC+Web+Semibold+Regular);
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Graphik LC Web Semibold Regular", sans-serif;
+  color: #89a;
+  background-color: #14181c;
+}
+
+h1{
+    color: white;
+}
+
+footer {
+  background-color: #25272a;
+  padding: 20px 0;
+}
+
+.footer-content {
+  text-align: center;
+}
+
+.footer-content ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer-content ul li {
+  display: inline;
+  margin-right: 20px;
+}
+
+.footer-content ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+.terms-page {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.terms-content {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.terms-content h2 {
+  color: white;
+  margin-top: 20px;
+}
+
+.terms-content p {
+  line-height: 1.6;
+}
+
+.terms-content ul {
+  margin-left: 20px;
+}
