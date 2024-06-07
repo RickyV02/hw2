@@ -114,7 +114,7 @@ class MainController extends BaseController{
             $url = "https://api.igdb.com/v4/games";
             $name = Request::get('name');
             $data = 'search "'. $name .'";' .
-                'fields id,name,alternative_names.name,genres.name,release_dates.*,cover.image_id,genres.*,summary,storyline,rating,platforms.name,themes.name,rating,collection.*,dlcs.name,expansions.name,franchise.name,involved_companies.company.name;where (cover != null)';
+                'fields id,name,alternative_names.name,genres.name,release_dates.*,cover.image_id,genres.*,summary,storyline,rating,platforms.name,themes.name,rating,collection.*,dlcs.name,expansions.name,franchise.name,involved_companies.company.name;';
     
             $headers = [
                 'Accept: application/json',

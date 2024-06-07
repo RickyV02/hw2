@@ -26,9 +26,9 @@
                 <input type="hidden" name="id" value="{{ $game->id }}">
                 <input type="hidden" name="name" value="{{ $game->name }}">
                 <input type="hidden" name="image"
-                    value="{{ 'https://images.igdb.com/igdb/image/upload/t_cover_big/' . $game->cover->image_id . '.jpg' }}">
+                    value="{{ isset($game->cover) ? 'https://images.igdb.com/igdb/image/upload/t_cover_big/' . $game->cover->image_id . '.jpg' : '' }}">
                 <img class="cover"
-                    src="{{ URL::to('https://images.igdb.com/igdb/image/upload/t_cover_big/' . $game->cover->image_id . '.jpg') }}">
+                    src="{{ isset($game->cover) ? URL::to('https://images.igdb.com/igdb/image/upload/t_cover_big/' . $game->cover->image_id . '.jpg') : URL::to('assets/placeholder.png') }}">
                 <h3>Leave a Review !</h3>
             </form>
             <div>
