@@ -45,11 +45,11 @@ function onJsonEmail(json) {
     if (json.exists) {
         error_msg.classList.remove("nascosto");
         error_msg.classList.add("errormsg");
-        checkSubmit = false;
+        checkSub = false;
     } else {
         error_msg.classList.remove("errormsg");
         error_msg.classList.add("nascosto");
-        checkSubmit = true;
+        checkSub = true;
     }
 }
 
@@ -58,11 +58,11 @@ function onJsonUsername(json) {
     if (json.exists) {
         error_msg.classList.remove("nascosto");
         error_msg.classList.add("errormsg");
-        checkSubmit = false;
+        checkSub = false;
     } else {
         error_msg.classList.remove("errormsg");
         error_msg.classList.add("nascosto");
-        checkSubmit = true;
+        checkSub = true;
     }
 }
 
@@ -71,7 +71,7 @@ function check_email() {
     if (!validateEmail(form.email.value)) {
         error_msg.classList.remove("nascosto");
         error_msg.classList.add("errormsg");
-        checkSubmit = false;
+        checkSub = false;
     } else {
         error_msg.classList.remove("errormsg");
         error_msg.classList.add("nascosto");
@@ -89,11 +89,11 @@ function check_username() {
     if (form.username.value.length < 4 || form.username.value.length > 16) {
         error_msg.classList.remove("nascosto");
         error_msg.classList.add("errormsg");
-        checkSubmit = false;
+        checkSub = false;
     } else {
         error_msg.classList.remove("errormsg");
         error_msg.classList.add("nascosto");
-        checkSubmit = true;
+        checkSub = true;
         fetch(
             "signup/check/username?q=" + encodeURIComponent(form.username.value)
         )
@@ -107,11 +107,11 @@ function check_password() {
     if (!validatePassword(form.password.value)) {
         error_msg.classList.remove("nascosto");
         error_msg.classList.add("errormsg");
-        checkSubmit = false;
+        checkSub = false;
     } else {
         error_msg.classList.remove("errormsg");
         error_msg.classList.add("nascosto");
-        checkSubmit = true;
+        checkSub = true;
     }
 }
 
@@ -120,11 +120,11 @@ function check_minlength() {
     if (form.password.value.length < 8) {
         error_msg.classList.remove("nascosto");
         error_msg.classList.add("errormsg");
-        checkSubmit = false;
+        checkSub = false;
     } else {
         error_msg.classList.remove("errormsg");
         error_msg.classList.add("nascosto");
-        checkSubmit = true;
+        checkSub = true;
     }
 }
 
@@ -133,11 +133,11 @@ function check_match() {
     if (form.password.value !== form.rpassword.value) {
         error_msg.classList.remove("nascosto");
         error_msg.classList.add("errormsg");
-        checkSubmit = false;
+        checkSub = false;
     } else {
         error_msg.classList.remove("errormsg");
         error_msg.classList.add("nascosto");
-        checkSubmit = true;
+        checkSub = true;
     }
 }
 
@@ -147,7 +147,7 @@ function check_credentials(event) {
         error_msg.classList.remove("nascosto");
         error_msg.classList.add("errormsg");
         event.preventDefault();
-    } else if (!checkSubmit) {
+    } else if (!checkSub) {
         event.preventDefault();
     }
 }
@@ -173,7 +173,7 @@ function checkFile() {
             const error_msg = document.getElementById("nosize");
             error_msg.classList.remove("nascosto");
             error_msg.classList.add("errormsg");
-            checkSubmit = false;
+            checkSub = false;
             return;
         }
         const allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"];
@@ -189,15 +189,15 @@ function checkFile() {
             const error_msg = document.getElementById("noext");
             error_msg.classList.remove("nascosto");
             error_msg.classList.add("errormsg");
-            checkSubmit = false;
+            checkSub = false;
             return;
         }
         hideFileErrors();
-        checkSubmit = true;
+        checkSub = true;
     }
 }
 
-let checkSubmit = false;
+let checkSub = false;
 const hide = "assets/eye_slash_visible_hide_hidden_show_icon_145987.svg";
 const show = "assets/eye_visible_hide_hidden_show_icon_145988.svg";
 const show_pwd = document.querySelectorAll(".show-password");

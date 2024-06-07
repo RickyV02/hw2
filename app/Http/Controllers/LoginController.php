@@ -5,6 +5,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Str;
 use App\Models\Account;
 
 class LoginController extends BaseController{
@@ -18,16 +19,16 @@ class LoginController extends BaseController{
     public function do_login(){
         $error = array();
         if(!empty(Request::post('username')) && !empty(Request::post('password'))){
-            $user = Account::where('username', Request::post('username'))->first();
+            $user = Account::where('username', Request::post('username'))->orWhere('email', Request::post('username'))->first();
             if(!$user){
-                $error[] = "Wrong username";
+                $error[] = "Wrong username/email";
             } else {
                 if(!password_verify(Request::post('password'), $user->PWD)){
                     $error[] = "Wrong password";
                 }
             }
         } else {
-            $error[] = "Insert username and password";
+            $error[] = "Insert credentials";
         }
         if(count($error) == 0){
             Session::put('id', $user->ID);
@@ -149,5 +150,42 @@ class LoginController extends BaseController{
         $errors[] = "Fill all the fields!";
         }
         return redirect('signup')->withInput()->withErrors($errors);
+    }
+
+    public function forgotten_password(){
+        if((Session::has('username') && Session::has('id'))||Cookie::has('remember_me')){
+            return redirect('home');
+        }else return view('forgottenpwd');
+    }
+    public function sendMail()
+    {
+        $status = [];
+        $email = Request::post('email');
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $status[] = "Email format not valid!";
+        } else {
+            $email = strtolower($email);
+            $account = Account::where('EMAIL', $email)->first();
+            if ($account) {
+                $new_password = Str::random(8);
+                $account->PWD = bcrypt($new_password);
+                if ($account->save()) {
+                    $subject = "Reset Password";
+                    $message = "Your new password is: " . $new_password . "\nGo to your profile to change it as soon as possible!";          
+                    $headers = "From: FlixNexusMail@gmail.com";
+                    if (mail($email, $subject, $message, $headers)) {
+                        $status[] = "Email sent successfully!";
+                    } else {
+                        $status[] = "Error sending email!";
+                    }
+                } else {
+                    $status[] = "Database connection error!";
+                }
+            } else {
+                $status[] = "Email not registered!";
+            }
+        }
+        return response()->json(["status" => $status]);
     }
 }

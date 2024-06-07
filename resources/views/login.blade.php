@@ -23,9 +23,9 @@
         <p class='errormsg'>{{ $err }}</p>
         @endforeach
 
-        <input type="text" placeholder="Username" name="username" autocomplete="off" required
+        <input type="text" placeholder="Username/Email" name="username" autocomplete="off" required
             value='{{ old("username") }}'>
-        <p id="nouser" class="nascosto">Insert username!</p>
+        <p id="nouser" class="nascosto">Insert username or email!</p>
         <div class="password-container">
             <input type="password" placeholder="Password" name="password" autocomplete="off" class="pwd"
                 value='{{ old("password") }}'>

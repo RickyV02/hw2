@@ -34,7 +34,7 @@ class CookieController extends Controller
         if (Cookie::has('remember_me')) {
             $token = Cookie::get('remember_me');
             $userToken = UserToken::where('TOKEN', $token)->first();
-            
+            Cookie::forget('remember_me');
             if ($userToken) {
                 $userToken->delete();
             }

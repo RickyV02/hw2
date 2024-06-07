@@ -2,10 +2,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Cookie;
 use App\Models\Account;
+use App\Models\UserToken;
 
 class IndexController extends BaseController{
 
@@ -142,6 +142,22 @@ public function home()
             'weekly' => $weekly
         ]);
     } else {
+        if(!Session::has('username') && !Session::has('id') && Cookie::has('remember_me')){
+            
+            $token = Cookie::get('remember_me');       
+            $userToken = UserToken::where('TOKEN', $token)->where('EXPIRES_AT', '>', now())->first();
+            if ($userToken) {       
+                $userId = $userToken->USERID;
+                $account = Account::find($userId);
+
+             if ($account) {
+                Session::put('id', $account->ID);
+                Session::put('username', $account->USERNAME);
+                } 
+                else return redirect('index')->withCookie(Cookie::forget('remember_me'));
+            } 
+            else return redirect('index')->withCookie(Cookie::forget('remember_me'));
+        }
         return view('home')->with([
             'series' => $series,
             'games' => $games,
@@ -151,6 +167,16 @@ public function home()
     }
 }
 
-//da finire (vedi matteo)
+public function about(){
+    return view("about");
+}
+
+public function terms(){
+    return view("terms");
+}
+
+public function services(){
+    return view("services");
+}
 
 }

@@ -9,7 +9,9 @@ class UserToken extends Model
     protected $table = 'USER_TOKENS';
     protected $primaryKey = 'ID';
     public $timestamps = false;
-    public function user(){   
-        return $this->belongsTo("App\Models\Account");
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class, 'USERID', 'ID');
     }
 }

@@ -1,0 +1,340 @@
+@import url(https://db.onlinewebfonts.com/c/f82a45d96a5a30abb6417c5b81fc416d?family=Graphik+LC+Web+Semibold+Regular);
+
+body {
+  font-family: "Graphik LC Web Semibold Regular", sans-serif;
+  font-size: 14px;
+  background-color: #14181c;
+  margin: 0;
+}
+
+.errormsg {
+  color: #ff0033;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.nascosto {
+  display: none;
+}
+
+header {
+  background-color: #1c1c1c;
+  color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 2em;
+  margin: 0.5em 0;
+}
+
+.film-review {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 50px;
+}
+
+.film-info h1,
+.review-form h1 {
+  color: antiquewhite;
+  font-size: 1.3em;
+  box-shadow: 2px 2px 2px 2px black;
+  border: solid 2px black;
+  font-style: italic;
+  margin: 0.5em 0;
+  padding: 5px;
+  width: fit-content;
+  height: auto;
+  cursor: default;
+}
+
+.film-info {
+  position: relative;
+}
+
+.film-info img {
+  max-height: 450px;
+  max-width: 500px;
+  border-radius: 5px;
+  border: 2px solid black;
+  transition: border-color 0.8s ease;
+  z-index: 0;
+}
+
+#heart {
+  position: absolute;
+  border: none;
+  left: 5px;
+  top: auto;
+  width: 50px;
+  height: auto;
+  cursor: pointer;
+  z-index: 2;
+}
+
+@media screen and (max-width: 550px) {
+  .film-info img {
+    width: 100%;
+  }
+  #heart {
+    width: 30px;
+    top: 3.3rem;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  #heart {
+    top: 4.5rem;
+  }
+}
+
+#other_reviews {
+  padding: 20px;
+}
+
+#other_reviews h1 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  color: burlywood;
+  border-bottom: 2px solid #2c3440;
+}
+
+#reviews-box {
+  display: grid;
+  grid-gap: 30px;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  border: 3px solid #1c1c1c;
+  box-shadow: 5px 5px 5px 5px black;
+  transition: border-color 1s ease;
+  background-color: #2c3440;
+  height: fit-content;
+  position: relative;
+}
+
+.review-heart {
+  position: absolute;
+  right: 5px;
+  top: 10px;
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  border: none;
+}
+
+.review:hover {
+  border-color: green;
+}
+
+.review div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  width: fit-content;
+  margin: 0.3em;
+}
+
+.review div h2 {
+  font-size: 16px;
+  font-weight: bold;
+  color: antiquewhite;
+}
+
+.text {
+  color: black;
+  line-height: 1.2;
+  font-size: 16px;
+  margin: 0.3em;
+}
+
+.rating {
+  color: green;
+  font-size: 16px;
+}
+
+.avatar {
+  border: 2px solid black;
+  border-radius: 50%;
+  max-width: 50px;
+  height: auto;
+  max-height: 45px;
+  transition: border-color 1s ease;
+}
+
+.avatar:hover {
+  border-color: rgb(122, 55, 122);
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  max-width: 50%;
+  padding-left: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.review-form label {
+  color: burlywood;
+  font-size: 16px;
+  font-style: italic;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.review-form a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 1em;
+}
+
+.review-form a:hover {
+  color: rgb(122, 55, 122);
+  text-decoration: underline;
+}
+
+.review-form input[type="number"],
+.review-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  resize: none;
+  background-color: #25272a;
+  color: antiquewhite;
+  box-shadow: 5px 5px 5px 5px black;
+  transition: border-color 0.8s ease;
+  outline: none;
+  font-family: "Graphik LC Web Semibold Regular", sans-serif;
+}
+
+.review-form input[type="number"]:focus,
+.review-form textarea:focus {
+  border-color: green;
+}
+
+input[type="submit"] {
+  background-color: rgb(122, 55, 122);
+  width: 150px;
+  color: antiquewhite;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 10px 0;
+}
+
+input[type="submit"]:hover {
+  background-color: green;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid #2c3440;
+  border-bottom: 2px solid #2c3440;
+}
+
+.info p {
+  font-size: 16px;
+  color: green;
+  margin: 0.5em 0;
+}
+
+h3 {
+  color: burlywood;
+  font-size: 18px;
+  text-decoration: underline;
+  margin: 0.5em 0;
+}
+
+.likes {
+  font-size: 16px;
+  color: green;
+  margin: 0.3em;
+}
+
+footer {
+  background-color: #2c3440;
+  color: #fff;
+  padding: 20px 0;
+  margin-top: 50px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+.footer-section p,
+.footer-section a {
+  font-weight: 1000;
+  font-size: 14px;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-section a:hover {
+  text-decoration: underline;
+}
+
+.footer-section h3 {
+  color: #14181d;
+  font-size: 20px;
+  font-weight: 1000;
+  margin-bottom: 10px;
+  text-decoration: underline;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 5px;
+}
+
+@media screen and (max-width: 800px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer-section {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}
