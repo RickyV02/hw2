@@ -655,13 +655,12 @@ class MainController extends BaseController{
                 } else {
                     if ($file->getSize() <= 5 * 1024 * 1024) {
                         $newName = uniqid('', true) . "." . $fileExtension;
-                        $avatarPath = 'assets/' . $newName;
-                        $file->move($avatarPath);
-                        $user->AVATAR = $avatarPath;
-                        if ($user->save()) {
-                            $updates["avatar"] = "Avatar changed successfully!";
-                        } else {
+                        $file->move(public_path() . "/assets", $newName);
+                        $user->AVATAR = 'assets/' . $newName;
+                        if (!$user->save()) {
                             $errors[] = "Error connecting to the Database";
+                        } else {
+                            $updates["avatar"] = "Avatar changed successfully!";
                         }
                     } else {
                         $errors[] = "The image must not exceed 5MB!";

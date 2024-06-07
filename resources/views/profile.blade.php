@@ -76,7 +76,7 @@
                 <input type="password" id="pwd_input" placeholder="New Password" autocomplete="off" name="password">
                 <img class="show-password" src="{{URL::to("assets/eye_visible_hide_hidden_show_icon_145988.svg")}}">
             </div>
-            <p id=" minlength" class="nascosto">Enter a password with at least 8 characters!</p>
+            <p id="minlength" class="nascosto">Enter a password with at least 8 characters!</p>
             <p id="pwd" class="nascosto">Password must contain at least one Upper Case letter and a special
                 character!
             </p>
