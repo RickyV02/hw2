@@ -97,7 +97,7 @@
                 @endforeach
             </div>
         </section>
-        <section class=" livefeed" id="randommovies">
+        <section class="livefeed" id="randommovies">
             <h1>10 RANDOM MOVIES TO WATCH</h1>
             <div>
                 @php

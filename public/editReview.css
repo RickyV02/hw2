@@ -41,7 +41,7 @@ header h1 {
 }
 
 #cover {
-  max-width: 350px;
+  max-width: 250px;
   height: auto;
   border-radius: 5px;
   border: 2px solid black;
@@ -50,9 +50,7 @@ header h1 {
 .review-form {
   display: flex;
   flex-direction: column;
-  flex: 1;
   max-width: 40%;
-  padding-left: 20px;
 }
 
 form {
@@ -131,12 +129,11 @@ input[type="submit"]:hover {
   }
   .review-form {
     max-width: 50%;
-    margin-top: 20px;
+    margin-right: 2em;
   }
 
   input[type="submit"] {
-    width: 70%;
-    margin-top: 20px;
+    width: 100%;
   }
 }
 

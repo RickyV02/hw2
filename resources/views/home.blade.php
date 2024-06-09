@@ -60,7 +60,7 @@
                 @endforeach
             </div>
         </section>
-        <section class=" livefeed" id="randommovies">
+        <section class="livefeed" id="randommovies">
             <h1>10 RANDOM MOVIES TO WATCH</h1>
             <div>
                 @php
@@ -73,7 +73,7 @@
                     } while (in_array($movieId, $usedIds));
                     @endphp
 
-                    <a href="{{ URL::to('result?id=' . urlencode($movieId)) }}">>
+                    <a href="{{ URL::to('result?id=' . urlencode($movieId)) }}">
                         <img class="thumb" src="{{ $randomMovie->image }}" data-id="{{ $movieId }}"
                             onerror="this.src=`{{ URL::to('assets/placeholder.png') }}`;">
                     </a>

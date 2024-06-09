@@ -114,7 +114,7 @@ class MainController extends BaseController{
             return redirect('index');
         }
         
-        if (Request::has('qid') && Request::has('name')) {
+        if (Request::has('qid') && (Request::has('name')) || Request::has('id')) {
             $qid = Request::get('qid');
             $search = '';
     
