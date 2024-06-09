@@ -9,7 +9,7 @@ use App\Models\UserToken;
 
 class IndexController extends BaseController{
 
-public function getToken(){
+private function getToken(){
 
     $client_id_twitch = env('CLIENT_ID_TWITCH');
     $client_secret_twitch = env('CLIENT_SECRET_TWITCH');

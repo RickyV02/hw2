@@ -14,63 +14,72 @@ use App\Models\MovieReviewLike;
 use App\Models\Account;
 
 class MainController extends BaseController{
+
     public function show(){
 
-        if ((!Session::has('username') && !Session::has('id'))) {
+        if (!Session::has('username') && !Session::has('id')) {
+            return redirect('index');
+        }
+        
+        if (!Request::has('search')) {
             return redirect('index');
         }
         
         $apikey = env('API_KEY');
-
+    
         $url = "https://imdb8.p.rapidapi.com/auto-complete?q=" . urlencode(Request::post('search'));
         $headers = [
             'x-rapidapi-key: ' . $apikey,
             'x-rapidapi-host: imdb8.p.rapidapi.com',
             'Content-Type: application/json',
         ];
-
+    
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
+    
         $response = curl_exec($curl);
-
+    
         curl_close($curl);
-
+    
         return view("search")->with([
             'name' => Request::post("search"),
             'json' => json_decode($response),
         ]);
     }
-
+    
     public function search(){
-        
+    
         if ((!Session::has('username') && !Session::has('id'))) {
             return redirect('index');
         }
         
+        if (!Request::has('name')) {
+            return redirect('index');
+        }
+        
         $apikey = env('API_KEY');
-
+    
         $url = "https://imdb8.p.rapidapi.com/auto-complete?q=" . urlencode(Request::get('name'));
         $headers = [
             'x-rapidapi-key: ' . $apikey,
             'x-rapidapi-host: imdb8.p.rapidapi.com',
             'Content-Type: application/json',
         ];
-
+    
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
+    
         $response = curl_exec($curl);
-
+    
         curl_close($curl);
-
+    
         return json_decode($response);
     }
-
-    public function getToken(){
-
+    
+    private function getToken(){
+        
         $client_id_twitch = env('CLIENT_ID_TWITCH');
         $client_secret_twitch = env('CLIENT_SECRET_TWITCH');
     
@@ -98,108 +107,113 @@ class MainController extends BaseController{
     
         return $token;
     }
-
+    
     public function result() {
-
+    
         if ((!Session::has('username') && !Session::has('id'))) {
             return redirect('index');
         }
         
-        $qid = Request::get('qid');
-        $search = '';
+        if (Request::has('qid') && Request::has('name')) {
+            $qid = Request::get('qid');
+            $search = '';
     
-        if ($qid === "videoGame") {
-            $client_id = env('CLIENT_ID_TWITCH');
+            if ($qid === "videoGame" && Request::has('name')) {
+                $client_id = env('CLIENT_ID_TWITCH');
     
-            $url = "https://api.igdb.com/v4/games";
-            $name = Request::get('name');
-            $data = 'search "'. $name .'";' .
-                'fields id,name,alternative_names.name,genres.name,release_dates.*,cover.image_id,genres.*,summary,storyline,rating,platforms.name,themes.name,rating,collection.*,dlcs.name,expansions.name,franchise.name,involved_companies.company.name;';
+                $url = "https://api.igdb.com/v4/games";
+                $name = Request::get('name');
+                $data = 'search "'. $name .'";' .
+                    'fields id,name,alternative_names.name,genres.name,release_dates.*,cover.image_id,genres.*,summary,storyline,rating,platforms.name,themes.name,rating,collection.*,dlcs.name,expansions.name,franchise.name,involved_companies.company.name;';
     
-            $headers = [
-                'Accept: application/json',
-                'Client-ID: ' . $client_id,
-                'Authorization: Bearer ' . $this->getToken()['access_token']
-            ];
+                $headers = [
+                    'Accept: application/json',
+                    'Client-ID: ' . $client_id,
+                    'Authorization: Bearer ' . $this->getToken()['access_token']
+                ];
     
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_URL => $url,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => $data,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HTTPHEADER => $headers,
-            ]);
+                $curl = curl_init();
+                curl_setopt_array($curl, [
+                    CURLOPT_URL => $url,
+                    CURLOPT_POST => true,
+                    CURLOPT_POSTFIELDS => $data,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_HTTPHEADER => $headers,
+                ]);
     
-            $response = curl_exec($curl);
-            curl_close($curl);
+                $response = curl_exec($curl);
+                curl_close($curl);
     
-            return view('result')->with([
-                'json' => json_decode($response),
-                'type' => 'videoGame',
-            ]);
-            
-        } elseif (Request::has('id')) {
-            $search = Request::get('id');
-            $type="";
-            if (Str::startsWith($search, 'tt')) {
-                $url = "https://imdb146.p.rapidapi.com/v1/title/?id=" . urlencode($search);
-                $type="tt";
-            } elseif (Str::startsWith($search, 'nm')) {
-                $url = "https://imdb146.p.rapidapi.com/v1/name/?id=" . urlencode($search);
-                $type="nm";
+                return view('result')->with([
+                    'json' => json_decode($response),
+                    'type' => 'videoGame',
+                ]);
+    
+            } elseif (Request::has('id')) {
+                $search = Request::get('id');
+                $type="";
+    
+                if (Str::startsWith($search, 'tt')) {
+                    $url = "https://imdb146.p.rapidapi.com/v1/title/?id=" . urlencode($search);
+                    $type="tt";
+                } elseif (Str::startsWith($search, 'nm')) {
+                    $url = "https://imdb146.p.rapidapi.com/v1/name/?id=" . urlencode($search);
+                    $type="nm";
+                }
+    
+                $headers = [
+                    'x-rapidapi-key: ' . env('API_KEY'),
+                    'x-rapidapi-host: imdb146.p.rapidapi.com',
+                    'Content-Type: application/json',
+                ];
+    
+                $curl = curl_init();
+                curl_setopt_array($curl, [
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_HTTPHEADER => $headers,
+                ]);
+    
+                $response = curl_exec($curl);
+                curl_close($curl);
+    
+                return view('result')->with([
+                    'json' => json_decode($response),
+                    'type' => $type,
+                ]);
             }
-    
-            $headers = [
-                'x-rapidapi-key: ' . env('API_KEY'),
-                'x-rapidapi-host: imdb146.p.rapidapi.com',
-                'Content-Type: application/json',
-            ];
-    
-            $curl = curl_init();
-            curl_setopt_array($curl, [
-                CURLOPT_URL => $url,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_HTTPHEADER => $headers,
-            ]);
-    
-            $response = curl_exec($curl);
-            curl_close($curl);
-    
-            return view('result')->with([
-                'json' => json_decode($response),
-                'type' => $type,
-            ]);
+        } else {
+            return redirect('index');
         }
     }
-
+    
     public function review(){
-        
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id') || !Request::has('name') || !Request::has('image')) {
             return redirect('index');
         }
-
+    
+        $userid = Session::get("username");
         $id = Request::post('id');
         $name = Request::post('name');
         $image = Request::post('image');
-        $userid=Session::get("username");
         
         return view('review', compact('id', 'name', 'image','userid'));
     }
-
+    
     public function saveReview() {
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id') || !Request::has('name') || !Request::has('cover') || !Request::has('rating') || !Request::has('review')) {
             return redirect('index');
         }
-
+    
         $username = Session::get('username');
         $id = Request::post('id');
         $name = Request::post('name');
         $cover = Request::post('cover');
         $rating = Request::post('rating');
         $review = Request::post('review');
-
+    
         if(is_numeric($id)) {
             $reviewModel = new GameReview();
             $reviewModel->GAME_ID = $id;
@@ -224,7 +238,7 @@ class MainController extends BaseController{
     
     public function getLike(){
         
-        if ((!Session::has('username') && !Session::has('id'))) {
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id')) {
             return redirect('index');
         }
         
@@ -243,10 +257,9 @@ class MainController extends BaseController{
             return response()->json(['ok' => false]);
         }
     }
-
     public function getReview(){
 
-        if ((!Session::has('username') && !Session::has('id'))) {
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id')) {
             return redirect('index');
         }
         
@@ -265,10 +278,10 @@ class MainController extends BaseController{
             return response()->json(['ok' => false]);
         }
     }
-
+    
     public function getReviewLikes(){
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id')) {
             return redirect('index');
         }
         
@@ -283,11 +296,11 @@ class MainController extends BaseController{
     
         return response()->json($row);
     }
-
+    
     public function getRandomReviews()
     {
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('q')) {
             return redirect('index');
         }
         
@@ -313,13 +326,13 @@ class MainController extends BaseController{
     }
     
     public function getNumReviews(){
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id')) {
             return redirect('index');
         }
         
         $id = Request::post('id');
-
+    
         if (is_numeric($id)) {
             $count = GameReview::where('GAME_ID', $id)->count();
         } else {
@@ -328,15 +341,15 @@ class MainController extends BaseController{
     
         return response()->json(['info' => $count]);
     }
-
+    
     public function getNumLikes(){
 
-        if ((!Session::has('username') && !Session::has('id'))) {
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id')) {
             return redirect('index');
         }
         
         $id = Request::post('id');
-
+    
         if (is_numeric($id)) {
             $count = GameLike::where('GAME_ID', $id)->count();
         } else {
@@ -345,10 +358,10 @@ class MainController extends BaseController{
     
         return response()->json(['info' => $count]);
     }
-
+    
     public function saveLikes(){
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id') || !Request::has('name') || !Request::has('cover')) {
             return redirect('index');
         }
         
@@ -377,10 +390,10 @@ class MainController extends BaseController{
             return response()->json(['ok' => false]);
         }
     }
-
+    
     public function deleteLikes(){
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id')) {
             return redirect('index');
         }
         
@@ -403,10 +416,10 @@ class MainController extends BaseController{
             return response()->json(['ok' => true]);
         }
     }
-
+    
     public function getMyReviewLikes(){
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id')) {
             return redirect('index');
         }
         
@@ -427,10 +440,10 @@ class MainController extends BaseController{
             return response()->json($likes);
         }
     }
-
+    
     public function addReviewLike(){
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id') || !Request::has('reference_id')) {
             return redirect('index');
         }
         
@@ -462,10 +475,10 @@ class MainController extends BaseController{
     
         return response()->json(['ok' => false]);
     }
-
+    
     public function deleteReviewLike(){
-
-        if ((!Session::has('username') && !Session::has('id'))) {
+    
+        if ((!Session::has('username') && !Session::has('id')) || !Request::has('id') || !Request::has('reference_id')) {
             return redirect('index');
         }
         
@@ -497,10 +510,14 @@ class MainController extends BaseController{
     
         return response()->json(['ok' => false]);
     }
-
+    
     public function profile() {
         if (!Session::has('username') && !Session::has('id')) {
             return redirect('login');
+        }
+
+        if (!Request::has('q')) {
+            return redirect('index');
         }
     
         $q = Request::get('q');
@@ -521,6 +538,10 @@ class MainController extends BaseController{
             return redirect('login');
         }
 
+        if (!Request::has('q')) {
+            return redirect('index');
+        }
+
         $q = Request::get('q');
         $movieReviews = MovieReview::with("user")->where('USERNAME', $q)->get();
         $gameReviews = GameReview::with("user")->where('USERNAME', $q)->get();
@@ -536,6 +557,10 @@ class MainController extends BaseController{
     public function getMyLikedReviews(){
         if (!Session::has('username') && !Session::has('id')) {
             return redirect('login');
+        }
+
+        if (!Request::has('q')) {
+            return redirect('index');
         }
  
         $q = Request::get('q');
@@ -560,6 +585,10 @@ class MainController extends BaseController{
             return redirect('login');
         }
 
+        if (!Request::has('q')) {
+            return redirect('index');
+        }
+
         $q = Request::get('q');
         $user = Account::where('USERNAME', $q)->first();
 
@@ -574,6 +603,10 @@ class MainController extends BaseController{
         
     if (!Session::has('username') && !Session::has('id')) {
         return redirect('login');
+    }
+
+    if (!Request::has('id') || !Request::has('reference_id')) {
+        return redirect('index');
     }
 
     $userid = Session::get('username');
@@ -714,6 +747,10 @@ class MainController extends BaseController{
             return redirect('index');
         }
 
+        if (!Request::has('id')) {
+            return redirect('index');
+        }
+
         $id = Request::get('id');
         $userid=Session::get("username");
         
@@ -725,6 +762,10 @@ class MainController extends BaseController{
 
         if (!Session::has('username') && !Session::has('id')) {
             return redirect('login');
+        }
+
+        if (!Request::has('id') && !Request::has('rating') && !Request::has('review')) {
+            return redirect('index');
         }
         
         $userid = Session::get('username');
@@ -752,5 +793,4 @@ class MainController extends BaseController{
             return response()->json(['ok' => false]);
         }
     }
-
 }
