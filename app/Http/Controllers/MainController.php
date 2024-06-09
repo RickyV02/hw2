@@ -709,4 +709,48 @@ class MainController extends BaseController{
         return response()->json(['rev' => $totalReviews]);
     }
 
+    public function editReview(){
+        if (!Session::has('username') && !Session::has('id')) {
+            return redirect('index');
+        }
+
+        $id = Request::get('id');
+        $userid=Session::get("username");
+        
+        return view('editReview', compact('id','userid'));
+    }
+
+    public function saveEditReview()
+    {
+
+        if (!Session::has('username') && !Session::has('id')) {
+            return redirect('login');
+        }
+        
+        $userid = Session::get('username');
+
+        $id = Request::post('id');
+        $rating = Request::post('rating');
+        $review = Request::post('review');
+
+        if (is_numeric($id)) {
+            $reviewModel = GameReview::where('USERNAME', $userid)->where("GAME_ID", $id)->first();
+        } else {
+            $reviewModel = MovieReview::where('USERNAME', $userid)->where('FILM_ID', $id)->first();
+        }
+
+        if ($reviewModel) {
+            $reviewModel->RECENSIONE = $review;
+            $reviewModel->VOTO = $rating;
+
+            if ($reviewModel->save()) {
+                return response()->json(['ok' => true]);
+            } else {
+                return response()->json(['ok' => false]);
+            }
+        } else {
+            return response()->json(['ok' => false]);
+        }
+    }
+
 }

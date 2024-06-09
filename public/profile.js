@@ -314,19 +314,13 @@ function onJsonMyReviews(json) {
                     encodeURIComponent(item.GAME_NAME) +
                     "&qid=videoGame";
                 redirectReviewLink.href =
-                    "editReview?id=" +
-                    encodeURIComponent(item.GAME_ID) +
-                    "&user=" +
-                    encodeURIComponent(item.user.USERNAME);
+                    "editReview?id=" + encodeURIComponent(item.GAME_ID);
             } else {
                 moviediv.dataset.id = item.FILM_ID;
                 redirectLink.href =
                     "result?id=" + encodeURIComponent(item.FILM_ID);
                 redirectReviewLink.href =
-                    "editReview?id=" +
-                    encodeURIComponent(item.FILM_ID) +
-                    "&user=" +
-                    encodeURIComponent(item.user.USERNAME);
+                    "editReview?id=" + encodeURIComponent(item.FILM_ID);
             }
             const cover = document.createElement("img");
             cover.src = item.COVER;
@@ -594,9 +588,7 @@ const hide = "assets/eye_slash_visible_hide_hidden_show_icon_145987.svg";
 const show = "assets/eye_visible_hide_hidden_show_icon_145988.svg";
 let settingsStatus = false;
 const username = document.getElementById("main-username").dataset.username;
-const token = document.head.querySelector(
-    'meta[name="csrf-token"]'
-).content;
+const token = document.head.querySelector('meta[name="csrf-token"]').content;
 fetchAvatar();
 fetchUserInfo();
 fetchUserFavourites();

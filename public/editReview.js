@@ -42,7 +42,7 @@ function onJsonShowRedirect(json) {
         formTitle.textContent = "Edit Saved!";
         form.classList.add("nascosto");
         const profileLink = document.createElement("a");
-        profileLink.href = "profile.php?q=" + encodeURIComponent(username);
+        profileLink.href = "profile?q=" + encodeURIComponent(username);
         profileLink.textContent = "See Your Review At Your Profile";
         const formDiv = document.querySelector(".review-form");
         formDiv.appendChild(profileLink);
@@ -54,7 +54,11 @@ function editReview() {
     formData.append("id", id);
     formData.append("review", reviewContent.value);
     formData.append("rating", form.rating.value);
-    fetch("saveEditReview.php", { method: "post", body: formData })
+    fetch("saveEditReview", {
+        method: "post",
+        body: formData,
+        headers: { "X-CSRF-TOKEN": token },
+    })
         .then(onResponse)
         .then(onJsonShowRedirect);
 }
@@ -85,7 +89,11 @@ function getOldReviewInfo() {
     const formData = new FormData();
     formData.append("id", id);
     formData.append("content", "");
-    fetch("getReview.php", { method: "post", body: formData })
+    fetch("getReview", {
+        method: "post",
+        body: formData,
+        headers: { "X-CSRF-TOKEN": token },
+    })
         .then(onResponse)
         .then(onJsonShowOldReview);
 }
@@ -98,5 +106,6 @@ reviewContent.addEventListener("blur", checkReview);
 form.addEventListener("submit", check_credentials);
 const id = document.querySelector(".review-form").dataset.id;
 const username = document.querySelector(".review-form").dataset.username;
+const token = document.head.querySelector('meta[name="csrf-token"]').content;
 
 getOldReviewInfo();

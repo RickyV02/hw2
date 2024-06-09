@@ -41,4 +41,6 @@ Route::post("deleteReview","App\Http\Controllers\MainController@deleteReview");
 Route::post("changeSettings","App\Http\Controllers\MainController@changeSettings");
 Route::get("fetchMyLikes",'App\Http\Controllers\MainController@countUserLikes');
 Route::get("fetchReviewCount",'App\Http\Controllers\MainController@countUserReviews');
+Route::get("editReview",'App\Http\Controllers\MainController@editReview');
+Route::post("saveEditReview",'App\Http\Controllers\MainController@saveEditReview');
 Route::get('logout', 'App\Http\Controllers\CookieController@deleteCookie');
