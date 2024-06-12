@@ -10,6 +10,7 @@ class CookieController extends Controller
 {
 
     public function setCookie() {
+        if (!Cookie::has('remember_me') && Session::has('username') && Session::has('id')){
         $token = bin2hex(random_bytes(32));
         $expires_at = now()->addDays(30)->format('Y-m-d H:i:s');
         $id = session()->get('id');
@@ -23,11 +24,10 @@ class CookieController extends Controller
         $cookie = Cookie::make('remember_me', $token, 30 * 24 * 60);
     
         return redirect('home')->withCookie($cookie);
-    }
-    
-
-    public function getCookie(){
-        return Cookie::get('remember_me');
+        
+        }else if(Cookie::has('remember_me')){
+            return redirect('home');
+        }
     }
     
     public function deleteCookie(){
