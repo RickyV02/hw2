@@ -13,7 +13,7 @@ class CookieController extends Controller
         if (!Cookie::has('remember_me') && Session::has('username') && Session::has('id')){
         $token = bin2hex(random_bytes(32));
         $expires_at = now()->addDays(30)->format('Y-m-d H:i:s');
-        $id = session()->get('id');
+        $id = Session::get('id');
         
         $userToken = new UserToken;
         $userToken->USERID = $id;
@@ -27,7 +27,7 @@ class CookieController extends Controller
         
         }else if(Cookie::has('remember_me')){
             return redirect('home');
-        }
+        }else return redirect("index");
     }
     
     public function deleteCookie(){
