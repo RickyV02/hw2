@@ -153,10 +153,8 @@ public function home()
              if ($account) {
                 Session::put('id', $account->ID);
                 Session::put('username', $account->USERNAME);
-                } 
-                else return redirect('index')->withCookie(Cookie::forget('remember_me'));
-            } 
-            else return redirect('index')->withCookie(Cookie::forget('remember_me'));
+                } else return redirect('index')->withCookie(Cookie::forget('remember_me'));
+            } else return redirect('index')->withCookie(Cookie::forget('remember_me'));
         }
         return view('home')->with([
             'series' => $series,
